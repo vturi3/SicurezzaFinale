@@ -13,6 +13,23 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
 public class Societa {
+    /*
+     * La classe Societa ha lo scopo di replicare in codice le azioni che dovrebbe
+     * effettuare la Societa descritta nel documento.
+     * In particolare ha lo scopo di rilasciare la propria chiave segreta al termine
+     * del referendum, permettendo cosi la decifratura dei voti.
+     * 
+     * Nella prima parte verranno caricati da file quelli che sono i certificati
+     * della Societa, ricavandone la chiave pubblica e la chiave privata
+     * 
+     * Per simulare il termine del referendum, il programma si ferma per 60 secondi,
+     * permettendo ai Votanti di, appunto, votare e mandare la randomness in
+     * seguito. Dopo i 60 secondi viene stabilita una comunicazione con il server e
+     * si procede all'invio della PrivateKey
+     * 
+     * 
+     */
+
     public static void main(String[] args) throws Exception {
         PrivateKey SocietaPrivateKey = null;
         PublicKey SocietaPublicKey = null;
@@ -51,21 +68,10 @@ public class Societa {
         OutputStream out = SocSock.getOutputStream();
         InputStream in = SocSock.getInputStream();
         while (!String.valueOf(esito).equals("0")) {
-            System.out.println("cami scusa");
-            // InputStream in = cSock.getInputStream();
-            // henceforth the client can send a byte array X to the server just writing with
-            // out.write(X)
-            // and can read a byte c from the server with c=in.read()
-            // in this specific protocol the Client first sends the string "Client" to the
-            // Server and receives the string "Server" from the Server and prints it
-            // The server sends back the string received to the Client, so the Server will
-            // send to the Client the string "Client" and the Client prints it
-            // so in the end the Client will print ServerClient
-            // The protocol is stupid and serves only to demonstrate how to read and write
-            // on secure sockets
-            System.out.println(SocietaPrivateKey.getEncoded());
+
             System.out.println("\nPrivate Key calcolata mandata: " + SocietaPrivateKey);
             byte[] signature = Cryptare.signature(SocietaPublicKey, SocietaPrivateKey, SocietaPrivateKey.getEncoded());
+
             ByteArrayOutputStream outputStream2 = new ByteArrayOutputStream();
             outputStream2.write(SocietaPrivateKey.getEncoded());
             outputStream2.write(signature);
@@ -81,17 +87,7 @@ public class Societa {
             esito = (char) in.read();
             System.out.println(esito);
         }
-        System.out.println("finito proseguo Arrivederci");
-        // int ch = 0;
-        // {
-        // !cSock.isClosed()
-        // while(true);
-        // System.out.print((char)ch);
-        // TimeUnit.SECONDS.sleep(1);
-        // }
-
-        // System.out.println((char)ch);
-        // SmartContract.computeFinalResult(SocietaPrivateKey,4);
+        System.out.println("Arrivederci!!!");
 
     }
 }
